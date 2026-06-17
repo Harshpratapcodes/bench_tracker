@@ -1,0 +1,17 @@
+# Render Blueprint — connect this repo on Render and it can pick this up
+# automatically ("New +" -> "Blueprint"), or just configure the same
+# settings by hand under "New +" -> "Web Service" if you'd rather not use it.
+services:
+  - type: web
+    name: the-bench
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: APP_PASSWORD
+        sync: false
+      - key: DATABASE_URL
+        sync: false
+      - key: PG_SSL
+        value: "true"

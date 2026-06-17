@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Bench</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #1C1815;
+    --bg-elevated: #262019;
+    --bg-card: #2C251D;
+    --ember: #C96A3B;
+    --ember-dim: rgba(201,106,59,0.16);
+    --brass: #B89860;
+    --moss: #7C9473;
+    --moss-dim: rgba(124,148,115,0.16);
+    --rust: #A14B3D;
+    --rust-dim: rgba(161,75,61,0.16);
+    --iron: #6B645C;
+    --text: #EDE3D3;
+    --text-dim: #A89A86;
+    --text-faint: #6E6457;
+    --border: rgba(237,227,211,0.10);
+    --border-strong: rgba(237,227,211,0.20);
+    --radius: 10px;
+    --font-display: 'Space Grotesk', sans-serif;
+    --font-body: 'IBM Plex Sans', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+  }
+  *{ box-sizing: border-box; }
+  html,body{ margin:0; padding:0; }
+  body{ background: var(--bg); color: var(--text); font-family: var(--font-body); line-height: 1.5; -webkit-font-smoothing: antialiased; }
+  .wrap{ max-width: 1080px; margin: 0 auto; padding: 28px 20px 80px; }
+
+  .head{ display:flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 16px; border-bottom: 1px solid var(--border); padding-bottom: 20px; margin-bottom: 18px; }
+  .eyebrow{ font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ember); margin: 0 0 6px; }
+  .head h1{ font-family: var(--font-display); font-weight: 700; font-size: 28px; margin: 0; letter-spacing: -0.01em; }
+  .head p{ margin: 6px 0 0; color: var(--text-dim); font-size: 14px; max-width: 480px; }
+  .stats{ display:flex; gap: 18px; font-family: var(--font-mono); font-size: 12px; color: var(--text-dim); text-align: right; }
+  .stats .num{ color: var(--text); font-size: 15px; display:block; }
+
+  .toolbar{ display:flex; justify-content:flex-end; gap:8px; margin-bottom: 18px; }
+
+  .tabs{ display:flex; gap: 4px; margin-bottom: 24px; }
+  .tab{ font-family: var(--font-display); font-weight: 600; font-size: 14px; background: none; border: 1px solid transparent; color: var(--text-dim); padding: 8px 16px; border-radius: var(--radius); cursor: pointer; }
+  .tab.is-active{ background: var(--bg-elevated); color: var(--text); border-color: var(--border-strong); }
+  .tab:focus-visible{ outline: 2px solid var(--ember); outline-offset: 2px; }
+  .view{ display:none; }
+  .view.is-active{ display:block; }
+
+  .section{ margin-bottom: 30px; }
+  .section-title{ font-family: var(--font-display); font-weight: 600; font-size: 16px; margin:0; display:flex; align-items:center; gap: 8px; }
+
+  .capture-row{ display:flex; gap: 8px; margin-bottom: 18px; }
+  .capture-row input[type="text"]{ flex:1; background: var(--bg-elevated); border: 1px solid var(--border-strong); color: var(--text); border-radius: 8px; padding: 10px 12px; font-size: 14px; font-family: var(--font-body); }
+  .capture-row input::placeholder{ color: var(--text-faint); }
+  .btn-add{ background: var(--ember-dim); border-color: var(--ember); color: var(--ember); font-weight: 600; padding: 10px 16px; }
+
+  .board{ display:grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+  .col-head{ font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-faint); margin-bottom: 10px; display:flex; justify-content:space-between; align-items:center; padding-bottom: 8px; border-bottom: 2px solid var(--col-accent, var(--border-strong)); }
+  .col-head .count{ color: var(--text-dim); }
+  .col{ min-height: 60px; }
+  .col-empty{ color: var(--text-faint); font-size: 12px; border: 1px dashed var(--border); border-radius: 8px; padding: 14px; text-align:center; }
+
+  .card{ background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 14px 12px; margin-bottom: 12px; border-top: 2px solid var(--card-accent, var(--ember)); }
+  .card-top{ display:flex; justify-content: space-between; align-items:center; gap: 6px; margin-bottom: 6px; }
+  .card-meta-label{ font-family: var(--font-mono); font-size: 10px; color: var(--text-faint); letter-spacing: 0.06em; text-transform: uppercase; }
+  .status-select{ background: var(--bg-elevated); color: var(--text); border: 1px solid var(--border-strong); border-radius: 6px; font-family: var(--font-mono); font-size: 10px; padding: 3px 4px; }
+  .card h3{ font-family: var(--font-display); font-size: 15px; margin: 2px 0 6px; line-height:1.25; }
+  .card-meta{ font-family: var(--font-mono); font-size: 10px; color: var(--text-faint); margin-bottom: 10px; }
+  .card-meta .day-count{ color: var(--brass); }
+
+  .next-action-wrap{ background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 8px; padding: 7px 9px; font-size: 12.5px; margin-bottom: 10px; }
+  .next-action-wrap .label{ font-family: var(--font-mono); font-size: 9.5px; color: var(--ember); text-transform: uppercase; letter-spacing: 0.06em; display:block; margin-bottom: 3px; }
+  .next-action{ cursor: text; min-height: 1.3em; }
+  .next-action[contenteditable="true"]:focus{ outline: 1px solid var(--border-strong); border-radius: 4px; }
+  .next-action.is-empty:before{ content: attr(data-placeholder); color: var(--text-faint); }
+
+  details.log-details{ margin-bottom: 10px; }
+  details.log-details summary{ cursor:pointer; font-family: var(--font-mono); font-size: 11px; color: var(--text-dim); list-style: none; display:flex; align-items:center; gap:6px; }
+  details.log-details summary::-webkit-details-marker{ display:none; }
+  details.log-details summary .chev{ font-size: 10px; color: var(--text-faint); transition: transform 0.15s; }
+  details.log-details[open] summary .chev{ transform: rotate(90deg); }
+  .log-add-row{ display:flex; gap: 6px; margin: 8px 0 6px; }
+  .log-add-row input{ flex:1; background: var(--bg-elevated); border: 1px solid var(--border-strong); color: var(--text); border-radius: 6px; padding: 6px 8px; font-size: 12px; font-family: var(--font-body); }
+  .log-list{ display:flex; flex-direction:column; gap: 6px; max-height: 180px; overflow-y:auto; }
+  .log-entry{ font-size: 12px; background: var(--bg-elevated); border-radius: 6px; padding: 6px 8px; display:flex; justify-content:space-between; gap: 8px; align-items:flex-start; }
+  .log-entry .ld{ font-family: var(--font-mono); font-size: 10px; color: var(--text-faint); flex-shrink:0; white-space:nowrap; }
+  .log-entry .lt{ flex:1; }
+  .log-entry button{ background:none; border:none; color: var(--text-faint); cursor:pointer; font-size: 13px; line-height:1; flex-shrink:0; }
+  .log-empty{ font-size: 12px; color: var(--text-faint); padding: 4px 0; }
+
+  .card-actions{ display:flex; gap: 6px; flex-wrap: wrap; }
+  .btn{ font-family: var(--font-body); font-weight: 500; font-size: 11.5px; border-radius: 7px; padding: 5px 9px; cursor: pointer; border: 1px solid var(--border-strong); background: transparent; color: var(--text); }
+  .btn:focus-visible{ outline: 2px solid var(--ember); outline-offset: 1px; }
+  .btn-ship{ background: var(--moss-dim); border-color: var(--moss); color: var(--moss); }
+  .btn-danger{ color: var(--rust); }
+  .btn-danger.is-confirming{ background: var(--rust-dim); border-color: var(--rust); }
+  .btn:hover{ filter: brightness(1.15); }
+  .btn-tiny{ font-size: 11px; padding: 3px 7px; }
+
+  .empty-note{ color: var(--text-faint); font-size: 13px; border: 1px dashed var(--border); border-radius: var(--radius); padding: 16px; text-align:center; }
+
+  details.archive{ border-top: 1px solid var(--border); padding-top: 16px; }
+  details.archive summary{ cursor:pointer; font-family: var(--font-display); font-weight:600; font-size: 14px; list-style: none; display:flex; align-items:center; gap:8px; }
+  details.archive summary::-webkit-details-marker{ display:none; }
+  details.archive summary .chev{ transition: transform 0.15s; font-size: 11px; color: var(--text-faint); }
+  details.archive[open] summary .chev{ transform: rotate(90deg); }
+  .archive-list{ margin-top: 12px; display:flex; flex-direction:column; gap:6px; }
+  .archive-row{ display:flex; justify-content: space-between; align-items:center; font-size: 13px; color: var(--text-dim); padding: 8px 10px; background: var(--bg-elevated); border-radius: 8px; gap: 10px; flex-wrap:wrap; }
+  .archive-row .left{ display:flex; align-items:center; gap:8px; min-width:0; }
+  .archive-row .right{ display:flex; align-items:center; gap:8px; }
+  .tag{ font-family: var(--font-mono); font-size: 10px; padding: 1px 7px; border-radius: 100px; }
+  .tag-done{ background: var(--moss-dim); color: var(--moss); }
+  .tag-abandoned{ background: var(--rust-dim); color: var(--rust); }
+
+  .skill-cols{ display:grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .skill-col-head{ font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-faint); margin-bottom: 10px; display:flex; justify-content:space-between; }
+  .skill-col{ background: var(--bg-elevated); border-radius: var(--radius); padding: 10px; min-height: 80px; }
+  .skill-card{ background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 9px 10px; margin-bottom: 8px; font-size: 13px; }
+  .skill-card .name{ font-weight: 500; margin-bottom: 6px; }
+  .skill-card .touched{ font-family: var(--font-mono); font-size: 10px; color: var(--text-faint); margin-bottom: 8px; }
+  .skill-card .row{ display:flex; gap: 6px; }
+
+  .gate{ position:fixed; inset:0; background: rgba(10,8,7,0.9); display:flex; align-items:center; justify-content:center; z-index: 100; padding: 20px; }
+  .gate-box{ background: var(--bg-card); border: 1px solid var(--border-strong); border-radius: 14px; padding: 28px 26px; max-width: 320px; width:100%; text-align:center; }
+  .gate-box h2{ font-family: var(--font-display); margin: 4px 0 14px; font-size: 19px; }
+  .gate-msg{ font-size: 12.5px; color: var(--rust); min-height: 16px; margin: 0 0 10px; }
+  .gate-box input{ width:100%; background: var(--bg-elevated); border: 1px solid var(--border-strong); color: var(--text); border-radius: 8px; padding: 10px 12px; font-size: 14px; margin-bottom: 12px; font-family: var(--font-body); }
+  .gate-box button{ width:100%; }
+
+  @media (max-width: 900px){ .board{ grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 640px){ .board{ grid-template-columns: 1fr; } .skill-cols{ grid-template-columns: 1fr; } .stats{ text-align:left; } }
+  @media (prefers-reduced-motion: reduce){ *{ transition: none !important; animation: none !important; } }
+
+  .loading{ text-align:center; padding: 60px 20px; color: var(--text-faint); font-family: var(--font-mono); font-size: 13px; }
+</style>
+</head>
+<body>
+
+<div class="gate" id="gate" style="display:none;">
+  <div class="gate-box">
+    <p class="eyebrow">The Bench</p>
+    <h2>Enter your password</h2>
+    <p class="gate-msg" id="gate-msg"></p>
+    <input type="password" id="gate-input" placeholder="Password" autocomplete="current-password">
+    <button class="btn btn-add" id="gate-submit">Unlock</button>
+  </div>
+</div>
+
+<div class="wrap" id="app">
+  <div class="loading">Connecting…</div>
+</div>
+
+<input type="file" id="import-file" accept="application/json" style="display:none;">
+
+<script>
+(function(){
+  var state = null;
+
+  var STATUSES = [
+    { key: 'idea',   label: 'Idea',    accent: 'var(--iron)' },
+    { key: 'active', label: 'Active',  accent: 'var(--ember)' },
+    { key: 'paused',  label: 'Paused', accent: 'var(--brass)' },
+    { key: 'blocked', label: 'Blocked', accent: 'var(--rust)' }
+  ];
+
+  function uid(){ return Date.now().toString(36) + Math.random().toString(36).slice(2,7); }
+  function daysBetween(a, b){ return Math.max(0, Math.floor((b - a) / 86400000)); }
+  function fmtDate(ts){ var d = new Date(ts); return d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' }); }
+  function escapeHtml(s){ return String(s).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+  function defaultState(){ return { projects: [], skills: [], activeTab: 'projects' }; }
+  function getPassword(){ return localStorage.getItem('bench-password') || ''; }
+  function setPassword(p){ localStorage.setItem('bench-password', p); }
+
+  function showGate(msg){
+    document.getElementById('gate').style.display = 'flex';
+    document.getElementById('gate-msg').textContent = msg || '';
+    document.getElementById('app').innerHTML = '';
+  }
+  function hideGate(){ document.getElementById('gate').style.display = 'none'; }
+
+  async function load(){
+    try{
+      var res = await fetch('/api/state', { headers: { 'x-app-password': getPassword() } });
+      if(res.status === 401){ showGate(getPassword() ? 'Wrong password — try again.' : ''); return; }
+      if(!res.ok){ showGate('Server error — try reloading.'); return; }
+      state = await res.json();
+      if(!state.activeTab) state.activeTab = 'projects';
+      hideGate();
+      render();
+    } catch(e){
+      showGate('Could not reach the server. Check your connection and try again.');
+    }
+  }
+
+  async function save(){
+    try{
+      await fetch('/api/state', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', 'x-app-password': getPassword() },
+        body: JSON.stringify(state)
+      });
+    } catch(e){ console.error('Save failed', e); }
+  }
+
+  function setTab(tab){ state.activeTab = tab; save(); render(); }
+
+  function addProject(title){
+    title = title.trim();
+    if(!title) return;
+    state.projects.unshift({ id: uid(), title: title, status: 'idea', note: '', log: [], createdAt: Date.now(), endedAt: null });
+    save(); render();
+  }
+  function getProject(id){ return state.projects.find(function(p){ return p.id === id; }); }
+  function setStatus(id, status){ var p = getProject(id); if(!p) return; p.status = status; save(); render(); }
+  function markDone(id){ var p = getProject(id); if(!p) return; p.status='done'; p.endedAt = Date.now(); save(); render(); }
+  function markAbandoned(id){ var p = getProject(id); if(!p) return; p.status='abandoned'; p.endedAt = Date.now(); save(); render(); }
+  function revive(id){ var p = getProject(id); if(!p) return; p.status='idea'; p.endedAt = null; save(); render(); }
+  function updateNote(id, text){ var p = getProject(id); if(p){ p.note = text; save(); } }
+  function addLogEntry(id, text){ text = text.trim(); if(!text) return; var p = getProject(id); if(!p) return; p.log.unshift({ id: uid(), text: text, at: Date.now() }); save(); render(); }
+  function deleteLogEntry(projectId, entryId){ var p = getProject(projectId); if(!p) return; p.log = p.log.filter(function(e){ return e.id !== entryId; }); save(); render(); }
+  function deleteProject(id){ state.projects = state.projects.filter(function(p){ return p.id !== id; }); save(); render(); }
+
+  function addSkill(name){ name = name.trim(); if(!name) return; state.skills.unshift({ id: uid(), name: name, level: 'learning', lastTouched: Date.now() }); save(); render(); }
+  function advanceSkill(id){ var order = ['learning','practicing','confident']; var s = state.skills.find(function(s){ return s.id === id; }); if(!s) return; var i = order.indexOf(s.level); if(i < order.length - 1){ s.level = order[i+1]; s.lastTouched = Date.now(); save(); render(); } }
+  function deleteSkill(id){ state.skills = state.skills.filter(function(s){ return s.id !== id; }); save(); render(); }
+
+  function exportData(){
+    var blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url; a.download = 'the-bench-backup-' + new Date().toISOString().slice(0,10) + '.json';
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+  function importData(file){
+    var reader = new FileReader();
+    reader.onload = function(){
+      try{
+        var parsed = JSON.parse(reader.result);
+        if(!parsed.projects || !parsed.skills){ alert('That file does not look like a Bench export.'); return; }
+        state = parsed;
+        if(!state.activeTab) state.activeTab = 'projects';
+        save(); render();
+      } catch(e){ alert('Could not read that file.'); }
+    };
+    reader.readAsText(file);
+  }
+
+  var confirmTimers = {};
+  function handleConfirmClick(btn, key, action){
+    if(btn.dataset.confirming === '1'){ clearTimeout(confirmTimers[key]); action(); return; }
+    btn.dataset.confirming = '1'; btn.classList.add('is-confirming');
+    var original = btn.textContent; btn.textContent = 'Sure?';
+    confirmTimers[key] = setTimeout(function(){ btn.dataset.confirming = '0'; btn.classList.remove('is-confirming'); btn.textContent = original; }, 2500);
+  }
+
+  function render(){
+    var app = document.getElementById('app');
+    var counts = { idea: 0, active: 0, paused: 0, blocked: 0, done: 0, abandoned: 0 };
+    state.projects.forEach(function(p){ counts[p.status] = (counts[p.status] || 0) + 1; });
+    var total = state.projects.length;
+
+    app.innerHTML =
+      '<div class="head">' +
+        '<div><p class="eyebrow">Workshop</p><h1>The Bench</h1><p>Juggle as many projects as you want — nothing here lets you forget you started it.</p></div>' +
+        '<div class="stats"><div><span class="num">' + counts.active + '</span>active</div><div><span class="num">' + (counts.paused + counts.blocked) + '</span>stuck</div><div><span class="num">' + counts.done + '</span>done</div><div><span class="num">' + total + '</span>tracked</div></div>' +
+      '</div>' +
+      '<div class="toolbar"><button class="btn" id="export-btn">Export backup</button><button class="btn" id="import-btn">Import</button></div>' +
+      '<div class="tabs">' +
+        '<button class="tab' + (state.activeTab==='projects' ? ' is-active' : '') + '" data-tab="projects">Projects</button>' +
+        '<button class="tab' + (state.activeTab==='skills' ? ' is-active' : '') + '" data-tab="skills">Skills</button>' +
+      '</div>' +
+      '<div class="view' + (state.activeTab==='projects' ? ' is-active' : '') + '" id="view-projects">' + renderProjects() + '</div>' +
+      '<div class="view' + (state.activeTab==='skills' ? ' is-active' : '') + '" id="view-skills">' + renderSkills() + '</div>';
+
+    bindEvents();
+  }
+
+  function statusOptionsHtml(current){
+    return STATUSES.map(function(s){ return '<option value="' + s.key + '"' + (s.key === current ? ' selected' : '') + '>' + s.label + '</option>'; }).join('');
+  }
+
+  function renderProjects(){
+    var columnsHtml = STATUSES.map(function(s){
+      var items = state.projects.filter(function(p){ return p.status === s.key; });
+      var cardsHtml = items.length === 0 ? '<div class="col-empty">Nothing here</div>' : items.map(renderCard).join('');
+      return '<div><div class="col-head" style="--col-accent:' + s.accent + '"><span>' + s.label + '</span><span class="count">' + items.length + '</span></div><div class="col">' + cardsHtml + '</div></div>';
+    }).join('');
+
+    var archived = state.projects.filter(function(p){ return p.status === 'done' || p.status === 'abandoned'; });
+    var archiveRows = archived.length === 0 ? '<div class="empty-note">Nothing closed out yet.</div>' :
+      '<div class="archive-list">' + archived.map(function(a){
+        var days = daysBetween(a.createdAt, a.endedAt || Date.now());
+        return '<div class="archive-row"><div class="left"><span>' + escapeHtml(a.title) + '</span><span class="tag ' + (a.status==='done' ? 'tag-done' : 'tag-abandoned') + '">' + a.status + '</span></div><div class="right"><span style="font-family:var(--font-mono);font-size:11px;">' + days + 'd</span><button class="btn btn-tiny" data-action="revive" data-id="' + a.id + '">Revive</button></div></div>';
+      }).join('') + '</div>';
+
+    return '<div class="section"><div class="capture-row"><input type="text" id="project-input" placeholder="What are you starting (or thinking about)?"><button class="btn btn-add" id="add-project-btn">Add</button></div><div class="board">' + columnsHtml + '</div></div>' +
+      '<details class="archive"><summary><span class="chev">▸</span> Done &amp; abandoned (' + archived.length + ')</summary><div class="archive-list-wrap">' + archiveRows + '</div></details>';
+  }
+
+  function renderCard(p){
+    var statusInfo = STATUSES.filter(function(s){ return s.key === p.status; })[0] || STATUSES[0];
+    var days = daysBetween(p.createdAt, Date.now());
+    var logHtml = p.log.length === 0 ? '<div class="log-empty">No updates logged yet</div>' :
+      p.log.map(function(e){ return '<div class="log-entry"><span class="ld">' + fmtDate(e.at) + '</span><span class="lt">' + escapeHtml(e.text) + '</span><button data-action="delete-log" data-id="' + p.id + '" data-entry="' + e.id + '" title="Remove">&times;</button></div>'; }).join('');
+
+    return '<div class="card" style="--card-accent:' + statusInfo.accent + '">' +
+        '<div class="card-top"><span class="card-meta-label">Day ' + days + '</span><select class="status-select" data-action="set-status" data-id="' + p.id + '">' + statusOptionsHtml(p.status) + '</select></div>' +
+        '<h3>' + escapeHtml(p.title) + '</h3>' +
+        '<div class="card-meta">started ' + fmtDate(p.createdAt) + '</div>' +
+        '<div class="next-action-wrap"><span class="label">Comment</span><div class="next-action' + (p.note ? '' : ' is-empty') + '" contenteditable="true" data-id="' + p.id + '" data-placeholder="State, blockers, thoughts…" data-action="edit-note">' + escapeHtml(p.note || '') + '</div></div>' +
+        '<details class="log-details"><summary><span class="chev">▸</span> Progress log (' + p.log.length + ')</summary><div class="log-add-row"><input type="text" class="log-input" data-id="' + p.id + '" placeholder="What did you just do?"><button class="btn btn-tiny" data-action="add-log" data-id="' + p.id + '">Add</button></div><div class="log-list">' + logHtml + '</div></details>' +
+        '<div class="card-actions"><button class="btn btn-ship" data-action="mark-done" data-id="' + p.id + '">Mark done</button><button class="btn btn-danger" data-action="mark-abandoned" data-id="' + p.id + '">Abandon</button><button class="btn btn-danger" data-action="delete-project" data-id="' + p.id + '">Delete</button></div>' +
+      '</div>';
+  }
+
+  function renderSkills(){
+    var cols = { learning: [], practicing: [], confident: [] };
+    state.skills.forEach(function(s){ (cols[s.level] || cols.learning).push(s); });
+    function colHtml(key, label){
+      var items = cols[key];
+      var inner = items.length === 0 ? '<div style="color:var(--text-faint);font-size:12px;padding:6px 2px;">Nothing here</div>' :
+        items.map(function(s){ return '<div class="skill-card"><div class="name">' + escapeHtml(s.name) + '</div><div class="touched">since ' + fmtDate(s.lastTouched) + '</div><div class="row">' + (key !== 'confident' ? '<button class="btn btn-tiny" data-action="advance-skill" data-id="' + s.id + '">Move forward →</button>' : '') + '<button class="btn btn-tiny btn-danger" data-action="delete-skill" data-id="' + s.id + '">Remove</button></div></div>'; }).join('');
+      return '<div><div class="skill-col-head">' + label + ' <span>' + items.length + '</span></div><div class="skill-col">' + inner + '</div></div>';
+    }
+    return '<div class="section"><div class="capture-row"><input type="text" id="skill-input" placeholder="What are you learning right now?"><button class="btn btn-add" id="add-skill-btn">Add</button></div><div class="skill-cols">' + colHtml('learning','Learning') + colHtml('practicing','Practicing') + colHtml('confident','Confident') + '</div></div>';
+  }
+
+  function bindEvents(){
+    document.querySelectorAll('.tab').forEach(function(btn){ btn.addEventListener('click', function(){ setTab(btn.dataset.tab); }); });
+
+    var projectInput = document.getElementById('project-input');
+    var addProjectBtn = document.getElementById('add-project-btn');
+    if(addProjectBtn){ addProjectBtn.addEventListener('click', function(){ addProject(projectInput.value); projectInput.value=''; }); projectInput.addEventListener('keydown', function(e){ if(e.key === 'Enter'){ addProject(projectInput.value); projectInput.value=''; } }); }
+
+    var skillInput = document.getElementById('skill-input');
+    var addSkillBtn = document.getElementById('add-skill-btn');
+    if(addSkillBtn){ addSkillBtn.addEventListener('click', function(){ addSkill(skillInput.value); skillInput.value=''; }); skillInput.addEventListener('keydown', function(e){ if(e.key === 'Enter'){ addSkill(skillInput.value); skillInput.value=''; } }); }
+
+    document.querySelectorAll('[data-action="set-status"]').forEach(function(sel){ sel.addEventListener('change', function(){ setStatus(sel.dataset.id, sel.value); }); });
+
+    document.querySelectorAll('[data-action="edit-note"]').forEach(function(el){
+      el.addEventListener('input', function(){ el.classList.toggle('is-empty', el.textContent.trim().length === 0); });
+      el.addEventListener('blur', function(){ updateNote(el.dataset.id, el.textContent.trim()); });
+      el.addEventListener('keydown', function(e){ if(e.key === 'Enter'){ e.preventDefault(); el.blur(); } });
+    });
+
+    document.querySelectorAll('.log-input').forEach(function(input){ input.addEventListener('keydown', function(e){ if(e.key === 'Enter'){ addLogEntry(input.dataset.id, input.value); input.value=''; } }); });
+    document.querySelectorAll('[data-action="add-log"]').forEach(function(b){ b.addEventListener('click', function(){ var input = document.querySelector('.log-input[data-id="' + b.dataset.id + '"]'); if(input){ addLogEntry(b.dataset.id, input.value); input.value=''; } }); });
+    document.querySelectorAll('[data-action="delete-log"]').forEach(function(b){ b.addEventListener('click', function(){ deleteLogEntry(b.dataset.id, b.dataset.entry); }); });
+
+    document.querySelectorAll('[data-action="mark-done"]').forEach(function(b){ b.addEventListener('click', function(){ markDone(b.dataset.id); }); });
+    document.querySelectorAll('[data-action="mark-abandoned"]').forEach(function(b){ b.addEventListener('click', function(){ handleConfirmClick(b, 'ab-'+b.dataset.id, function(){ markAbandoned(b.dataset.id); }); }); });
+    document.querySelectorAll('[data-action="delete-project"]').forEach(function(b){ b.addEventListener('click', function(){ handleConfirmClick(b, 'dp-'+b.dataset.id, function(){ deleteProject(b.dataset.id); }); }); });
+    document.querySelectorAll('[data-action="revive"]').forEach(function(b){ b.addEventListener('click', function(){ revive(b.dataset.id); }); });
+
+    document.querySelectorAll('[data-action="advance-skill"]').forEach(function(b){ b.addEventListener('click', function(){ advanceSkill(b.dataset.id); }); });
+    document.querySelectorAll('[data-action="delete-skill"]').forEach(function(b){ b.addEventListener('click', function(){ handleConfirmClick(b, 's-'+b.dataset.id, function(){ deleteSkill(b.dataset.id); }); }); });
+
+    var exportBtn = document.getElementById('export-btn');
+    if(exportBtn) exportBtn.addEventListener('click', exportData);
+    var importBtn = document.getElementById('import-btn');
+    var importFile = document.getElementById('import-file');
+    if(importBtn) importBtn.addEventListener('click', function(){ importFile.click(); });
+    importFile.addEventListener('change', function(){ if(importFile.files[0]) importData(importFile.files[0]); importFile.value = ''; });
+  }
+
+  document.getElementById('gate-submit').addEventListener('click', function(){
+    setPassword(document.getElementById('gate-input').value);
+    load();
+  });
+  document.getElementById('gate-input').addEventListener('keydown', function(e){ if(e.key === 'Enter'){ document.getElementById('gate-submit').click(); } });
+
+  load();
+})();
+</script>
+</body>
+</html>
