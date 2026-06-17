@@ -9,71 +9,107 @@
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg: #1C1815;
-    --bg-elevated: #262019;
-    --bg-card: #2C251D;
-    --ember: #C96A3B;
-    --ember-dim: rgba(201,106,59,0.16);
-    --brass: #B89860;
-    --moss: #7C9473;
-    --moss-dim: rgba(124,148,115,0.16);
-    --rust: #A14B3D;
-    --rust-dim: rgba(161,75,61,0.16);
-    --iron: #6B645C;
-    --text: #EDE3D3;
-    --text-dim: #A89A86;
-    --text-faint: #6E6457;
-    --border: rgba(237,227,211,0.10);
-    --border-strong: rgba(237,227,211,0.20);
+    --bg: #0F1219;
+    --bg-elevated: #171C26;
+    --bg-card: #1A1F2B;
+    --ember: #6D8BFF;
+    --ember-dim: rgba(109,139,255,0.16);
+    --brass: #E0A23B;
+    --brass-dim: rgba(224,162,59,0.16);
+    --moss: #3FC9C0;
+    --moss-dim: rgba(63,201,192,0.16);
+    --rust: #E0566B;
+    --rust-dim: rgba(224,86,107,0.16);
+    --iron: #5A6478;
+    --iron-dim: rgba(90,100,120,0.16);
+    --text: #E6EAF2;
+    --text-dim: #9AA3B5;
+    --text-faint: #5E6679;
+    --border: rgba(230,234,242,0.10);
+    --border-strong: rgba(230,234,242,0.18);
     --radius: 10px;
+    --radius-lg: 14px;
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.25);
+    --shadow-md: 0 4px 14px rgba(0,0,0,0.30);
+    --shadow-lg: 0 12px 32px rgba(0,0,0,0.42);
+    --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
     --font-display: 'Space Grotesk', sans-serif;
     --font-body: 'IBM Plex Sans', sans-serif;
     --font-mono: 'JetBrains Mono', monospace;
   }
   *{ box-sizing: border-box; }
   html,body{ margin:0; padding:0; }
-  body{ background: var(--bg); color: var(--text); font-family: var(--font-body); line-height: 1.5; -webkit-font-smoothing: antialiased; }
-  .wrap{ max-width: 1080px; margin: 0 auto; padding: 28px 20px 80px; }
+  body{
+    background:
+      radial-gradient(1100px 520px at 78% -8%, rgba(109,139,255,0.12), transparent 60%),
+      radial-gradient(900px 500px at 0% 0%, rgba(63,201,192,0.07), transparent 55%),
+      var(--bg);
+    background-attachment: fixed;
+    color: var(--text);
+    font-family: var(--font-body);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+  ::selection{ background: var(--ember-dim); color: var(--text); }
+  *::-webkit-scrollbar{ width: 9px; height: 9px; }
+  *::-webkit-scrollbar-track{ background: transparent; }
+  *::-webkit-scrollbar-thumb{ background: var(--border-strong); border-radius: 100px; }
+  *::-webkit-scrollbar-thumb:hover{ background: var(--iron); }
+  .wrap{ max-width: 1080px; margin: 0 auto; padding: 36px 20px 96px; }
 
-  .head{ display:flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 16px; border-bottom: 1px solid var(--border); padding-bottom: 20px; margin-bottom: 18px; }
-  .eyebrow{ font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ember); margin: 0 0 6px; }
-  .head h1{ font-family: var(--font-display); font-weight: 700; font-size: 28px; margin: 0; letter-spacing: -0.01em; }
-  .head p{ margin: 6px 0 0; color: var(--text-dim); font-size: 14px; max-width: 480px; }
-  .stats{ display:flex; gap: 18px; font-family: var(--font-mono); font-size: 12px; color: var(--text-dim); text-align: right; }
-  .stats .num{ color: var(--text); font-size: 15px; display:block; }
+  .head{ display:flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 20px; border-bottom: 1px solid var(--border); padding-bottom: 24px; margin-bottom: 20px; }
+  .eyebrow{ font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ember); margin: 0 0 8px; display:flex; align-items:center; gap: 7px; }
+  .eyebrow::before{ content:""; width: 16px; height: 1px; background: var(--ember); opacity: 0.6; }
+  .head h1{ font-family: var(--font-display); font-weight: 700; font-size: 30px; margin: 0; letter-spacing: -0.015em; }
+  .head p{ margin: 8px 0 0; color: var(--text-dim); font-size: 14px; max-width: 480px; }
+  .stats{ display:flex; gap: 10px; font-family: var(--font-mono); font-size: 11px; color: var(--text-dim); }
+  .stats > div{ background: var(--bg-elevated); border: 1px solid var(--border); border-radius: var(--radius); padding: 9px 14px; min-width: 60px; text-align: center; box-shadow: var(--shadow-sm); }
+  .stats .num{ color: var(--text); font-family: var(--font-display); font-weight: 600; font-size: 19px; display:block; line-height: 1.1; margin-bottom: 2px; }
+  .stats .num.accent{ color: var(--ember); }
 
   .toolbar{ display:flex; justify-content:flex-end; gap:8px; margin-bottom: 18px; }
 
-  .tabs{ display:flex; gap: 4px; margin-bottom: 24px; }
-  .tab{ font-family: var(--font-display); font-weight: 600; font-size: 14px; background: none; border: 1px solid transparent; color: var(--text-dim); padding: 8px 16px; border-radius: var(--radius); cursor: pointer; }
-  .tab.is-active{ background: var(--bg-elevated); color: var(--text); border-color: var(--border-strong); }
+  .tabs{ display:inline-flex; gap: 4px; margin-bottom: 26px; background: var(--bg-elevated); border: 1px solid var(--border); padding: 4px; border-radius: 12px; }
+  .tab{ font-family: var(--font-display); font-weight: 600; font-size: 14px; background: none; border: 1px solid transparent; color: var(--text-dim); padding: 7px 18px; border-radius: 8px; cursor: pointer; transition: background 0.18s var(--ease), color 0.18s var(--ease); }
+  .tab:hover{ color: var(--text); }
+  .tab.is-active{ background: var(--bg-card); color: var(--text); border-color: var(--border-strong); box-shadow: var(--shadow-sm); }
   .tab:focus-visible{ outline: 2px solid var(--ember); outline-offset: 2px; }
   .view{ display:none; }
-  .view.is-active{ display:block; }
+  .view.is-active{ display:block; animation: fade-up 0.28s var(--ease); }
+  @keyframes fade-up{ from{ opacity: 0; transform: translateY(6px); } to{ opacity: 1; transform: none; } }
+  @keyframes pop{ from{ opacity: 0; transform: scale(0.96); } to{ opacity: 1; transform: none; } }
 
   .section{ margin-bottom: 30px; }
   .section-title{ font-family: var(--font-display); font-weight: 600; font-size: 16px; margin:0; display:flex; align-items:center; gap: 8px; }
 
-  .capture-row{ display:flex; gap: 8px; margin-bottom: 18px; }
-  .capture-row input[type="text"]{ flex:1; background: var(--bg-elevated); border: 1px solid var(--border-strong); color: var(--text); border-radius: 8px; padding: 10px 12px; font-size: 14px; font-family: var(--font-body); }
+  .capture-row{ display:flex; gap: 8px; margin-bottom: 22px; }
+  .capture-row input[type="text"]{ flex:1; background: var(--bg-elevated); border: 1px solid var(--border-strong); color: var(--text); border-radius: 9px; padding: 11px 14px; font-size: 14px; font-family: var(--font-body); transition: border-color 0.18s var(--ease), box-shadow 0.18s var(--ease); }
+  .capture-row input[type="text"]:focus{ outline: none; border-color: var(--ember); box-shadow: 0 0 0 3px var(--ember-dim); }
   .capture-row input::placeholder{ color: var(--text-faint); }
-  .btn-add{ background: var(--ember-dim); border-color: var(--ember); color: var(--ember); font-weight: 600; padding: 10px 16px; }
+  .btn-add{ background: var(--ember-dim); border-color: var(--ember); color: var(--ember); font-weight: 600; padding: 10px 18px; }
+  .btn-add:hover{ background: var(--ember); color: var(--bg); }
 
-  .board{ display:grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+  .board{ display:grid; grid-template-columns: repeat(3, 1fr); gap: 14px; align-items: start; }
   .col-head{ font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-faint); margin-bottom: 10px; display:flex; justify-content:space-between; align-items:center; padding-bottom: 8px; border-bottom: 2px solid var(--col-accent, var(--border-strong)); }
   .col-head .count{ color: var(--text-dim); }
   .col{ min-height: 60px; }
   .col-empty{ color: var(--text-faint); font-size: 12px; border: 1px dashed var(--border); border-radius: 8px; padding: 14px; text-align:center; }
 
-  .card{ background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 14px 12px; margin-bottom: 12px; border-top: 2px solid var(--card-accent, var(--ember)); }
+  .card{ position: relative; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 15px 13px; margin-bottom: 12px; box-shadow: var(--shadow-sm); transition: transform 0.18s var(--ease), box-shadow 0.18s var(--ease), border-color 0.18s var(--ease); overflow: hidden; }
+  .card::before{ content:""; position:absolute; top:0; left:0; right:0; height: 3px; background: var(--card-accent, var(--ember)); }
+  .card:hover{ transform: translateY(-2px); box-shadow: var(--shadow-md); border-color: var(--border-strong); }
   .card-top{ display:flex; justify-content: space-between; align-items:center; gap: 6px; margin-bottom: 6px; }
+  .card-controls{ display:flex; gap: 5px; }
   .card-meta-label{ font-family: var(--font-mono); font-size: 10px; color: var(--text-faint); letter-spacing: 0.06em; text-transform: uppercase; }
-  .status-select{ background: var(--bg-elevated); color: var(--text); border: 1px solid var(--border-strong); border-radius: 6px; font-family: var(--font-mono); font-size: 10px; padding: 3px 4px; }
+  .status-select{ background: var(--status-dim, var(--bg-elevated)); color: var(--status-accent, var(--text)); border: 1px solid var(--status-accent, var(--border-strong)); border-radius: 100px; font-family: var(--font-mono); font-size: 10px; font-weight: 500; letter-spacing: 0.04em; padding: 3px 8px; cursor: pointer; transition: filter 0.15s var(--ease); }
+  .status-select:hover{ filter: brightness(1.15); }
+  .status-select option{ background: var(--bg-elevated); color: var(--text); }
   .card h3{ font-family: var(--font-display); font-size: 15px; margin: 2px 0 6px; line-height:1.25; }
   .card-meta{ font-family: var(--font-mono); font-size: 10px; color: var(--text-faint); margin-bottom: 10px; }
   .card-meta .day-count{ color: var(--brass); }
 
-  .next-action-wrap{ background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 8px; padding: 7px 9px; font-size: 12.5px; margin-bottom: 10px; }
+  .next-action-wrap{ background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 8px; padding: 8px 10px; font-size: 12.5px; margin-bottom: 10px; transition: border-color 0.18s var(--ease); }
+  .next-action-wrap:focus-within{ border-color: var(--ember); }
   .next-action-wrap .label{ font-family: var(--font-mono); font-size: 9.5px; color: var(--ember); text-transform: uppercase; letter-spacing: 0.06em; display:block; margin-bottom: 3px; }
   .next-action{ cursor: text; min-height: 1.3em; }
   .next-action[contenteditable="true"]:focus{ outline: 1px solid var(--border-strong); border-radius: 4px; }
@@ -85,7 +121,10 @@
   details.log-details summary .chev{ font-size: 10px; color: var(--text-faint); transition: transform 0.15s; }
   details.log-details[open] summary .chev{ transform: rotate(90deg); }
   .log-add-row{ display:flex; gap: 6px; margin: 8px 0 6px; }
-  .log-add-row input{ flex:1; background: var(--bg-elevated); border: 1px solid var(--border-strong); color: var(--text); border-radius: 6px; padding: 6px 8px; font-size: 12px; font-family: var(--font-body); }
+  .log-add-row input{ flex:1; background: var(--bg-elevated); border: 1px solid var(--border-strong); color: var(--text); border-radius: 6px; padding: 6px 8px; font-size: 12px; font-family: var(--font-body); transition: border-color 0.15s var(--ease); }
+  .log-add-row input:focus{ outline: none; border-color: var(--ember); }
+  .log-entry{ transition: background 0.15s var(--ease); }
+  .log-entry:hover{ background: var(--bg-card); }
   .log-list{ display:flex; flex-direction:column; gap: 6px; max-height: 180px; overflow-y:auto; }
   .log-entry{ font-size: 12px; background: var(--bg-elevated); border-radius: 6px; padding: 6px 8px; display:flex; justify-content:space-between; gap: 8px; align-items:flex-start; }
   .log-entry .ld{ font-family: var(--font-mono); font-size: 10px; color: var(--text-faint); flex-shrink:0; white-space:nowrap; }
@@ -93,16 +132,19 @@
   .log-entry button{ background:none; border:none; color: var(--text-faint); cursor:pointer; font-size: 13px; line-height:1; flex-shrink:0; }
   .log-empty{ font-size: 12px; color: var(--text-faint); padding: 4px 0; }
 
-  .card-actions{ display:flex; gap: 6px; flex-wrap: wrap; }
-  .btn{ font-family: var(--font-body); font-weight: 500; font-size: 11.5px; border-radius: 7px; padding: 5px 9px; cursor: pointer; border: 1px solid var(--border-strong); background: transparent; color: var(--text); }
+  .card-actions{ display:flex; gap: 6px; flex-wrap: wrap; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border); }
+  .btn{ font-family: var(--font-body); font-weight: 500; font-size: 11.5px; border-radius: 7px; padding: 5px 10px; cursor: pointer; border: 1px solid var(--border-strong); background: transparent; color: var(--text); transition: background 0.15s var(--ease), color 0.15s var(--ease), border-color 0.15s var(--ease), transform 0.1s var(--ease); }
   .btn:focus-visible{ outline: 2px solid var(--ember); outline-offset: 1px; }
+  .btn:active{ transform: translateY(1px); }
   .btn-ship{ background: var(--moss-dim); border-color: var(--moss); color: var(--moss); }
-  .btn-danger{ color: var(--rust); }
-  .btn-danger.is-confirming{ background: var(--rust-dim); border-color: var(--rust); }
-  .btn:hover{ filter: brightness(1.15); }
-  .btn-tiny{ font-size: 11px; padding: 3px 7px; }
+  .btn-ship:hover{ background: var(--moss); color: var(--bg); }
+  .btn-danger{ color: var(--rust); border-color: var(--border-strong); }
+  .btn-danger:hover{ border-color: var(--rust); background: var(--rust-dim); }
+  .btn-danger.is-confirming{ background: var(--rust); border-color: var(--rust); color: var(--bg); }
+  .btn:not(.btn-ship):not(.btn-add):not(.btn-danger):hover{ border-color: var(--border-strong); background: var(--bg-elevated); }
+  .btn-tiny{ font-size: 11px; padding: 3px 8px; }
 
-  .empty-note{ color: var(--text-faint); font-size: 13px; border: 1px dashed var(--border); border-radius: var(--radius); padding: 16px; text-align:center; }
+  .empty-note{ color: var(--text-faint); font-size: 13px; border: 1px dashed var(--border-strong); border-radius: var(--radius); padding: 28px 16px; text-align:center; grid-column: 1 / -1; background: rgba(230,234,242,0.015); }
 
   details.archive{ border-top: 1px solid var(--border); padding-top: 16px; }
   details.archive summary{ cursor:pointer; font-family: var(--font-display); font-weight:600; font-size: 14px; list-style: none; display:flex; align-items:center; gap:8px; }
@@ -110,33 +152,38 @@
   details.archive summary .chev{ transition: transform 0.15s; font-size: 11px; color: var(--text-faint); }
   details.archive[open] summary .chev{ transform: rotate(90deg); }
   .archive-list{ margin-top: 12px; display:flex; flex-direction:column; gap:6px; }
-  .archive-row{ display:flex; justify-content: space-between; align-items:center; font-size: 13px; color: var(--text-dim); padding: 8px 10px; background: var(--bg-elevated); border-radius: 8px; gap: 10px; flex-wrap:wrap; }
+  .archive-row{ display:flex; justify-content: space-between; align-items:center; font-size: 13px; color: var(--text-dim); padding: 9px 12px; background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 8px; gap: 10px; flex-wrap:wrap; transition: border-color 0.15s var(--ease); }
+  .archive-row:hover{ border-color: var(--border-strong); }
   .archive-row .left{ display:flex; align-items:center; gap:8px; min-width:0; }
   .archive-row .right{ display:flex; align-items:center; gap:8px; }
   .tag{ font-family: var(--font-mono); font-size: 10px; padding: 1px 7px; border-radius: 100px; }
   .tag-done{ background: var(--moss-dim); color: var(--moss); }
   .tag-abandoned{ background: var(--rust-dim); color: var(--rust); }
 
-  .skill-cols{ display:grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
-  .skill-col-head{ font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-faint); margin-bottom: 10px; display:flex; justify-content:space-between; }
-  .skill-col{ background: var(--bg-elevated); border-radius: var(--radius); padding: 10px; min-height: 80px; }
-  .skill-card{ background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 9px 10px; margin-bottom: 8px; font-size: 13px; }
-  .skill-card .name{ font-weight: 500; margin-bottom: 6px; }
-  .skill-card .touched{ font-family: var(--font-mono); font-size: 10px; color: var(--text-faint); margin-bottom: 8px; }
-  .skill-card .row{ display:flex; gap: 6px; }
+  .skill-grid{ display:grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; }
+  .skill-card{ position: relative; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 15px 13px; box-shadow: var(--shadow-sm); transition: transform 0.18s var(--ease), box-shadow 0.18s var(--ease), border-color 0.18s var(--ease); overflow: hidden; }
+  .skill-card::before{ content:""; position:absolute; top:0; left:0; right:0; height: 3px; background: var(--card-accent, var(--ember)); }
+  .skill-card:hover{ transform: translateY(-2px); box-shadow: var(--shadow-md); border-color: var(--border-strong); }
+  .skill-card .skill-top{ display:flex; justify-content: space-between; align-items:center; gap: 6px; margin-bottom: 6px; }
+  .level-badge{ background: var(--status-dim, var(--bg-elevated)); color: var(--status-accent, var(--text)); border: 1px solid var(--status-accent, var(--border-strong)); border-radius: 100px; font-family: var(--font-mono); font-size: 10px; font-weight: 500; letter-spacing: 0.04em; padding: 3px 9px; }
+  .skill-card .name{ font-family: var(--font-display); font-size: 15px; margin: 2px 0 6px; line-height:1.25; }
+  .skill-card .touched{ font-family: var(--font-mono); font-size: 10px; color: var(--text-faint); margin-bottom: 12px; }
+  .skill-card .row{ display:flex; gap: 6px; flex-wrap: wrap; padding-top: 12px; border-top: 1px solid var(--border); }
 
-  .gate{ position:fixed; inset:0; background: rgba(10,8,7,0.9); display:flex; align-items:center; justify-content:center; z-index: 100; padding: 20px; }
-  .gate-box{ background: var(--bg-card); border: 1px solid var(--border-strong); border-radius: 14px; padding: 28px 26px; max-width: 320px; width:100%; text-align:center; }
-  .gate-box h2{ font-family: var(--font-display); margin: 4px 0 14px; font-size: 19px; }
+  .gate{ position:fixed; inset:0; background: rgba(6,8,13,0.78); backdrop-filter: blur(6px); display:flex; align-items:center; justify-content:center; z-index: 100; padding: 20px; }
+  .gate-box{ background: var(--bg-card); border: 1px solid var(--border-strong); border-radius: var(--radius-lg); padding: 32px 28px; max-width: 340px; width:100%; text-align:center; box-shadow: var(--shadow-lg); animation: pop 0.25s var(--ease); }
+  .gate-box h2{ font-family: var(--font-display); margin: 4px 0 14px; font-size: 20px; }
   .gate-msg{ font-size: 12.5px; color: var(--rust); min-height: 16px; margin: 0 0 10px; }
   .gate-box input{ width:100%; background: var(--bg-elevated); border: 1px solid var(--border-strong); color: var(--text); border-radius: 8px; padding: 10px 12px; font-size: 14px; margin-bottom: 12px; font-family: var(--font-body); }
   .gate-box button{ width:100%; }
 
   @media (max-width: 900px){ .board{ grid-template-columns: repeat(2, 1fr); } }
-  @media (max-width: 640px){ .board{ grid-template-columns: 1fr; } .skill-cols{ grid-template-columns: 1fr; } .stats{ text-align:left; } }
+  @media (max-width: 640px){ .board{ grid-template-columns: 1fr; } .stats{ text-align:left; } }
   @media (prefers-reduced-motion: reduce){ *{ transition: none !important; animation: none !important; } }
 
-  .loading{ text-align:center; padding: 60px 20px; color: var(--text-faint); font-family: var(--font-mono); font-size: 13px; }
+  .loading{ text-align:center; padding: 80px 20px; color: var(--text-faint); font-family: var(--font-mono); font-size: 13px; }
+  .loading::after{ content:""; display:block; width: 22px; height: 22px; margin: 14px auto 0; border: 2px solid var(--border-strong); border-top-color: var(--ember); border-radius: 50%; animation: spin 0.7s linear infinite; }
+  @keyframes spin{ to{ transform: rotate(360deg); } }
 </style>
 </head>
 <body>
@@ -162,11 +209,25 @@
   var state = null;
 
   var STATUSES = [
-    { key: 'idea',   label: 'Idea',    accent: 'var(--iron)' },
-    { key: 'active', label: 'Active',  accent: 'var(--ember)' },
-    { key: 'paused',  label: 'Paused', accent: 'var(--brass)' },
-    { key: 'blocked', label: 'Blocked', accent: 'var(--rust)' }
+    { key: 'idea',   label: 'Idea',    accent: 'var(--iron)',  dim: 'var(--iron-dim)' },
+    { key: 'active', label: 'Active',  accent: 'var(--ember)', dim: 'var(--ember-dim)' },
+    { key: 'paused',  label: 'Paused', accent: 'var(--brass)', dim: 'var(--brass-dim)' },
+    { key: 'blocked', label: 'Blocked', accent: 'var(--rust)', dim: 'var(--rust-dim)' }
   ];
+
+  var PRIORITIES = [
+    { key: 'high',   label: 'High',   rank: 0, accent: 'var(--rust)',  dim: 'var(--rust-dim)' },
+    { key: 'medium', label: 'Medium', rank: 1, accent: 'var(--brass)', dim: 'var(--brass-dim)' },
+    { key: 'low',    label: 'Low',    rank: 2, accent: 'var(--iron)',  dim: 'var(--iron-dim)' }
+  ];
+  function priorityInfo(key){ return PRIORITIES.filter(function(p){ return p.key === key; })[0] || PRIORITIES[1]; }
+
+  var LEVELS = [
+    { key: 'learning',   label: 'Learning',   rank: 0, accent: 'var(--ember)', dim: 'var(--ember-dim)' },
+    { key: 'practicing', label: 'Practicing', rank: 1, accent: 'var(--brass)', dim: 'var(--brass-dim)' },
+    { key: 'confident',  label: 'Confident',  rank: 2, accent: 'var(--moss)',  dim: 'var(--moss-dim)' }
+  ];
+  function levelInfo(key){ return LEVELS.filter(function(l){ return l.key === key; })[0] || LEVELS[0]; }
 
   function uid(){ return Date.now().toString(36) + Math.random().toString(36).slice(2,7); }
   function daysBetween(a, b){ return Math.max(0, Math.floor((b - a) / 86400000)); }
@@ -190,6 +251,8 @@
       if(!res.ok){ showGate('Server error — try reloading.'); return; }
       state = await res.json();
       if(!state.activeTab) state.activeTab = 'projects';
+      state.projects.forEach(function(p){ if(!p.priority) p.priority = 'medium'; });
+      state.skills.forEach(function(s){ if(!s.createdAt) s.createdAt = s.lastTouched || Date.now(); });
       hideGate();
       render();
     } catch(e){
@@ -212,11 +275,12 @@
   function addProject(title){
     title = title.trim();
     if(!title) return;
-    state.projects.unshift({ id: uid(), title: title, status: 'idea', note: '', log: [], createdAt: Date.now(), endedAt: null });
+    state.projects.unshift({ id: uid(), title: title, status: 'idea', priority: 'medium', note: '', log: [], createdAt: Date.now(), endedAt: null });
     save(); render();
   }
   function getProject(id){ return state.projects.find(function(p){ return p.id === id; }); }
   function setStatus(id, status){ var p = getProject(id); if(!p) return; p.status = status; save(); render(); }
+  function setPriority(id, priority){ var p = getProject(id); if(!p) return; p.priority = priority; save(); render(); }
   function markDone(id){ var p = getProject(id); if(!p) return; p.status='done'; p.endedAt = Date.now(); save(); render(); }
   function markAbandoned(id){ var p = getProject(id); if(!p) return; p.status='abandoned'; p.endedAt = Date.now(); save(); render(); }
   function revive(id){ var p = getProject(id); if(!p) return; p.status='idea'; p.endedAt = null; save(); render(); }
@@ -225,8 +289,8 @@
   function deleteLogEntry(projectId, entryId){ var p = getProject(projectId); if(!p) return; p.log = p.log.filter(function(e){ return e.id !== entryId; }); save(); render(); }
   function deleteProject(id){ state.projects = state.projects.filter(function(p){ return p.id !== id; }); save(); render(); }
 
-  function addSkill(name){ name = name.trim(); if(!name) return; state.skills.unshift({ id: uid(), name: name, level: 'learning', lastTouched: Date.now() }); save(); render(); }
-  function advanceSkill(id){ var order = ['learning','practicing','confident']; var s = state.skills.find(function(s){ return s.id === id; }); if(!s) return; var i = order.indexOf(s.level); if(i < order.length - 1){ s.level = order[i+1]; s.lastTouched = Date.now(); save(); render(); } }
+  function addSkill(name){ name = name.trim(); if(!name) return; state.skills.unshift({ id: uid(), name: name, level: 'learning', createdAt: Date.now(), lastTouched: Date.now() }); save(); render(); }
+  function advanceSkill(id){ var s = state.skills.find(function(s){ return s.id === id; }); if(!s) return; var i = levelInfo(s.level).rank; if(i < LEVELS.length - 1){ s.level = LEVELS[i+1].key; s.lastTouched = Date.now(); save(); render(); } }
   function deleteSkill(id){ state.skills = state.skills.filter(function(s){ return s.id !== id; }); save(); render(); }
 
   function exportData(){
@@ -245,6 +309,8 @@
         if(!parsed.projects || !parsed.skills){ alert('That file does not look like a Bench export.'); return; }
         state = parsed;
         if(!state.activeTab) state.activeTab = 'projects';
+        state.projects.forEach(function(p){ if(!p.priority) p.priority = 'medium'; });
+        state.skills.forEach(function(s){ if(!s.createdAt) s.createdAt = s.lastTouched || Date.now(); });
         save(); render();
       } catch(e){ alert('Could not read that file.'); }
     };
@@ -268,7 +334,7 @@
     app.innerHTML =
       '<div class="head">' +
         '<div><p class="eyebrow">Workshop</p><h1>The Bench</h1><p>Juggle as many projects as you want — nothing here lets you forget you started it.</p></div>' +
-        '<div class="stats"><div><span class="num">' + counts.active + '</span>active</div><div><span class="num">' + (counts.paused + counts.blocked) + '</span>stuck</div><div><span class="num">' + counts.done + '</span>done</div><div><span class="num">' + total + '</span>tracked</div></div>' +
+        '<div class="stats"><div><span class="num accent">' + counts.active + '</span>active</div><div><span class="num">' + (counts.paused + counts.blocked) + '</span>stuck</div><div><span class="num">' + counts.done + '</span>done</div><div><span class="num">' + total + '</span>tracked</div></div>' +
       '</div>' +
       '<div class="toolbar"><button class="btn" id="export-btn">Export backup</button><button class="btn" id="import-btn">Import</button></div>' +
       '<div class="tabs">' +
@@ -284,13 +350,14 @@
   function statusOptionsHtml(current){
     return STATUSES.map(function(s){ return '<option value="' + s.key + '"' + (s.key === current ? ' selected' : '') + '>' + s.label + '</option>'; }).join('');
   }
+  function priorityOptionsHtml(current){
+    return PRIORITIES.map(function(p){ return '<option value="' + p.key + '"' + (p.key === current ? ' selected' : '') + '>⚑ ' + p.label + '</option>'; }).join('');
+  }
 
   function renderProjects(){
-    var columnsHtml = STATUSES.map(function(s){
-      var items = state.projects.filter(function(p){ return p.status === s.key; });
-      var cardsHtml = items.length === 0 ? '<div class="col-empty">Nothing here</div>' : items.map(renderCard).join('');
-      return '<div><div class="col-head" style="--col-accent:' + s.accent + '"><span>' + s.label + '</span><span class="count">' + items.length + '</span></div><div class="col">' + cardsHtml + '</div></div>';
-    }).join('');
+    var active = state.projects.filter(function(p){ return p.status !== 'done' && p.status !== 'abandoned'; });
+    active.sort(function(a, b){ return priorityInfo(a.priority).rank - priorityInfo(b.priority).rank; });
+    var listHtml = active.length === 0 ? '<div class="empty-note">Nothing on the bench yet. Add something above.</div>' : active.map(renderCard).join('');
 
     var archived = state.projects.filter(function(p){ return p.status === 'done' || p.status === 'abandoned'; });
     var archiveRows = archived.length === 0 ? '<div class="empty-note">Nothing closed out yet.</div>' :
@@ -299,18 +366,24 @@
         return '<div class="archive-row"><div class="left"><span>' + escapeHtml(a.title) + '</span><span class="tag ' + (a.status==='done' ? 'tag-done' : 'tag-abandoned') + '">' + a.status + '</span></div><div class="right"><span style="font-family:var(--font-mono);font-size:11px;">' + days + 'd</span><button class="btn btn-tiny" data-action="revive" data-id="' + a.id + '">Revive</button></div></div>';
       }).join('') + '</div>';
 
-    return '<div class="section"><div class="capture-row"><input type="text" id="project-input" placeholder="What are you starting (or thinking about)?"><button class="btn btn-add" id="add-project-btn">Add</button></div><div class="board">' + columnsHtml + '</div></div>' +
+    return '<div class="section"><div class="capture-row"><input type="text" id="project-input" placeholder="What are you starting (or thinking about)?"><button class="btn btn-add" id="add-project-btn">Add</button></div><div class="board">' + listHtml + '</div></div>' +
       '<details class="archive"><summary><span class="chev">▸</span> Done &amp; abandoned (' + archived.length + ')</summary><div class="archive-list-wrap">' + archiveRows + '</div></details>';
   }
 
   function renderCard(p){
     var statusInfo = STATUSES.filter(function(s){ return s.key === p.status; })[0] || STATUSES[0];
+    var prInfo = priorityInfo(p.priority);
     var days = daysBetween(p.createdAt, Date.now());
     var logHtml = p.log.length === 0 ? '<div class="log-empty">No updates logged yet</div>' :
       p.log.map(function(e){ return '<div class="log-entry"><span class="ld">' + fmtDate(e.at) + '</span><span class="lt">' + escapeHtml(e.text) + '</span><button data-action="delete-log" data-id="' + p.id + '" data-entry="' + e.id + '" title="Remove">&times;</button></div>'; }).join('');
 
     return '<div class="card" style="--card-accent:' + statusInfo.accent + '">' +
-        '<div class="card-top"><span class="card-meta-label">Day ' + days + '</span><select class="status-select" data-action="set-status" data-id="' + p.id + '">' + statusOptionsHtml(p.status) + '</select></div>' +
+        '<div class="card-top"><span class="card-meta-label">Day ' + days + '</span>' +
+          '<div class="card-controls">' +
+            '<select class="status-select pr-select" title="Priority" data-action="set-priority" data-id="' + p.id + '" style="--status-accent:' + prInfo.accent + ';--status-dim:' + prInfo.dim + '">' + priorityOptionsHtml(p.priority) + '</select>' +
+            '<select class="status-select" title="Status" data-action="set-status" data-id="' + p.id + '" style="--status-accent:' + statusInfo.accent + ';--status-dim:' + statusInfo.dim + '">' + statusOptionsHtml(p.status) + '</select>' +
+          '</div>' +
+        '</div>' +
         '<h3>' + escapeHtml(p.title) + '</h3>' +
         '<div class="card-meta">started ' + fmtDate(p.createdAt) + '</div>' +
         '<div class="next-action-wrap"><span class="label">Comment</span><div class="next-action' + (p.note ? '' : ' is-empty') + '" contenteditable="true" data-id="' + p.id + '" data-placeholder="State, blockers, thoughts…" data-action="edit-note">' + escapeHtml(p.note || '') + '</div></div>' +
@@ -320,15 +393,24 @@
   }
 
   function renderSkills(){
-    var cols = { learning: [], practicing: [], confident: [] };
-    state.skills.forEach(function(s){ (cols[s.level] || cols.learning).push(s); });
-    function colHtml(key, label){
-      var items = cols[key];
-      var inner = items.length === 0 ? '<div style="color:var(--text-faint);font-size:12px;padding:6px 2px;">Nothing here</div>' :
-        items.map(function(s){ return '<div class="skill-card"><div class="name">' + escapeHtml(s.name) + '</div><div class="touched">since ' + fmtDate(s.lastTouched) + '</div><div class="row">' + (key !== 'confident' ? '<button class="btn btn-tiny" data-action="advance-skill" data-id="' + s.id + '">Move forward →</button>' : '') + '<button class="btn btn-tiny btn-danger" data-action="delete-skill" data-id="' + s.id + '">Remove</button></div></div>'; }).join('');
-      return '<div><div class="skill-col-head">' + label + ' <span>' + items.length + '</span></div><div class="skill-col">' + inner + '</div></div>';
-    }
-    return '<div class="section"><div class="capture-row"><input type="text" id="skill-input" placeholder="What are you learning right now?"><button class="btn btn-add" id="add-skill-btn">Add</button></div><div class="skill-cols">' + colHtml('learning','Learning') + colHtml('practicing','Practicing') + colHtml('confident','Confident') + '</div></div>';
+    var skills = state.skills.slice().sort(function(a, b){ return levelInfo(a.level).rank - levelInfo(b.level).rank; });
+    var gridHtml = skills.length === 0 ? '<div class="empty-note">No skills tracked yet. Add one above.</div>' :
+      skills.map(renderSkillCard).join('');
+    return '<div class="section"><div class="capture-row"><input type="text" id="skill-input" placeholder="What are you learning right now?"><button class="btn btn-add" id="add-skill-btn">Add</button></div><div class="skill-grid">' + gridHtml + '</div></div>';
+  }
+
+  function renderSkillCard(s){
+    var info = levelInfo(s.level);
+    var days = daysBetween(s.createdAt, Date.now());
+    return '<div class="skill-card" style="--card-accent:' + info.accent + '">' +
+        '<div class="skill-top">' +
+          '<span class="level-badge" style="--status-accent:' + info.accent + ';--status-dim:' + info.dim + '">' + info.label + '</span>' +
+          '<span class="card-meta-label">Day ' + days + '</span>' +
+        '</div>' +
+        '<div class="name">' + escapeHtml(s.name) + '</div>' +
+        '<div class="touched">since ' + fmtDate(s.lastTouched) + '</div>' +
+        '<div class="row">' + (s.level !== 'confident' ? '<button class="btn btn-tiny" data-action="advance-skill" data-id="' + s.id + '">Move forward →</button>' : '') + '<button class="btn btn-tiny btn-danger" data-action="delete-skill" data-id="' + s.id + '">Remove</button></div>' +
+      '</div>';
   }
 
   function bindEvents(){
@@ -343,6 +425,7 @@
     if(addSkillBtn){ addSkillBtn.addEventListener('click', function(){ addSkill(skillInput.value); skillInput.value=''; }); skillInput.addEventListener('keydown', function(e){ if(e.key === 'Enter'){ addSkill(skillInput.value); skillInput.value=''; } }); }
 
     document.querySelectorAll('[data-action="set-status"]').forEach(function(sel){ sel.addEventListener('change', function(){ setStatus(sel.dataset.id, sel.value); }); });
+    document.querySelectorAll('[data-action="set-priority"]').forEach(function(sel){ sel.addEventListener('change', function(){ setPriority(sel.dataset.id, sel.value); }); });
 
     document.querySelectorAll('[data-action="edit-note"]').forEach(function(el){
       el.addEventListener('input', function(){ el.classList.toggle('is-empty', el.textContent.trim().length === 0); });
