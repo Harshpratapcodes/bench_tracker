@@ -1,0 +1,186 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Butterfly preview</title><style>
+ :root{ --ease: cubic-bezier(0.22, 0.61, 0.36, 1); }
+ html,body{ margin:0; height:100%; }
+ body{ background: radial-gradient(1100px 520px at 78% -8%, rgba(109,139,255,0.12), transparent 60%), radial-gradient(900px 500px at 0% 0%, rgba(63,201,192,0.07), transparent 55%), #0F1219; overflow:hidden; }
+ .hint{ position:fixed; left:50%; top:18px; transform:translateX(-50%); color:#5E6679; font-family:monospace; font-size:12px; letter-spacing:.05em; text-align:center; }
+ /* ---- Sparkly butterfly ---- */
+  #butterfly{ display:none; position: fixed; top: 0; left: 0; width: 88px; height: 80px; margin: -40px 0 0 -44px; z-index: 60; pointer-events: none; will-change: transform; }
+  #butterfly svg{ display:block; overflow: visible; filter: drop-shadow(0 0 4px rgba(255,255,255,0.55)) drop-shadow(0 0 16px rgba(167,139,250,0.42)); }
+  @media (max-width: 640px){ #butterfly{ width: 60px; height: 55px; margin: -27px 0 0 -30px; } }
+  #butterfly .bf-glint{ animation: bf-twinkle 2.4s var(--ease) infinite; }
+  #butterfly .bf-glint:nth-of-type(2n){ animation-delay: -1.1s; }
+  #butterfly .bf-glint:nth-of-type(3n){ animation-delay: -0.7s; }
+  @keyframes bf-twinkle{ 0%,100%{ opacity: 0.35; } 50%{ opacity: 1; } }
+  .bf-spark{ position: fixed; z-index: 59; pointer-events: none; font-size: 9px; line-height: 1; color: #ffffff; text-shadow: 0 0 6px rgba(199,210,255,0.9); animation: bf-spark-fade 1.2s ease-out forwards; }
+  @keyframes bf-spark-fade{ from{ opacity: 0.85; transform: translate(-50%,-50%) scale(1); } to{ opacity: 0; transform: translate(-50%,-50%) scale(0.3) translateY(10px); } }
+</style></head><body>
+<div class="hint">butterfly flight preview (Ideas tab) &mdash; preview only; delete whenever</div>
+<div id="view-ideas" class="is-active" style="position:fixed;left:-9999px"></div>
+<div id="butterfly" aria-hidden="true">
+  <svg viewBox="0 0 220 200" width="100%" height="100%">
+    <defs>
+      <radialGradient id="bf-wing" gradientUnits="userSpaceOnUse" cx="110" cy="103" r="115">
+        <stop offset="0" stop-color="#ffffff" stop-opacity="0.55"/>
+        <stop offset="0.3" stop-color="#eaf0ff" stop-opacity="0.28"/>
+        <stop offset="0.65" stop-color="#d7e0ff" stop-opacity="0.12"/>
+        <stop offset="1" stop-color="#cdd8ff" stop-opacity="0.03"/>
+      </radialGradient>
+      <radialGradient id="bf-core" cx="50%" cy="50%" r="50%">
+        <stop offset="0" stop-color="#ffffff" stop-opacity="0.95"/>
+        <stop offset="0.55" stop-color="#eef2ff" stop-opacity="0.28"/>
+        <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+      </radialGradient>
+      <path id="bf-glint" d="M0,-4 C0.6,-1 1,-0.6 4,0 C1,0.6 0.6,1 0,4 C-0.6,1 -1,0.6 -4,0 C-1,-0.6 -0.6,-1 0,-4 Z" fill="#ffffff"/>
+    </defs>
+
+    <g class="bf-wings">
+      <g fill="url(#bf-wing)" stroke="rgba(255,255,255,0.45)" stroke-width="0.8">
+        <path vector-effect="non-scaling-stroke" d="M110,95 C128,55 165,28 192,34 C214,40 210,86 184,103 C160,118 126,114 110,103 Z"/>
+        <path vector-effect="non-scaling-stroke" d="M110,108 C130,120 156,138 150,165 C146,185 116,184 108,160 C104,140 104,122 110,110 Z"/>
+        <path vector-effect="non-scaling-stroke" d="M110,95 C92,55 55,28 28,34 C6,40 10,86 36,103 C60,118 94,114 110,103 Z"/>
+        <path vector-effect="non-scaling-stroke" d="M110,108 C90,120 64,138 70,165 C74,185 104,184 112,160 C116,140 116,122 110,110 Z"/>
+      </g>
+      <path class="bf-veins" vector-effect="non-scaling-stroke" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="0.7" stroke-linecap="round"
+        d="M110,100L150,50M110,101L178,60M110,103L192,84M110,104L176,104M110,112L132,150M111,112L145,160M110,114L127,172M110,100L70,50M110,101L42,60M110,103L28,84M110,104L44,104M110,112L88,150M109,112L75,160M110,114L93,172"/>
+      <g class="bf-sparks" fill="#ffffff">
+        <circle cx="150" cy="60" r="1.1" opacity="0.9"/><circle cx="170" cy="52" r="0.7" opacity="0.7"/><circle cx="182" cy="72" r="0.9" opacity="0.8"/><circle cx="160" cy="82" r="0.6" opacity="0.6"/><circle cx="136" cy="70" r="0.8" opacity="0.7"/><circle cx="190" cy="88" r="0.5" opacity="0.5"/><circle cx="168" cy="96" r="0.7" opacity="0.6"/>
+        <circle cx="128" cy="142" r="1.0" opacity="0.85"/><circle cx="138" cy="158" r="0.7" opacity="0.7"/><circle cx="122" cy="160" r="0.6" opacity="0.6"/><circle cx="132" cy="128" r="0.6" opacity="0.55"/><circle cx="118" cy="150" r="0.5" opacity="0.5"/><circle cx="140" cy="170" r="0.5" opacity="0.5"/>
+        <circle cx="70" cy="60" r="1.1" opacity="0.9"/><circle cx="50" cy="52" r="0.7" opacity="0.7"/><circle cx="38" cy="72" r="0.9" opacity="0.8"/><circle cx="60" cy="82" r="0.6" opacity="0.6"/><circle cx="84" cy="70" r="0.8" opacity="0.7"/><circle cx="30" cy="88" r="0.5" opacity="0.5"/><circle cx="52" cy="96" r="0.7" opacity="0.6"/>
+        <circle cx="92" cy="142" r="1.0" opacity="0.85"/><circle cx="82" cy="158" r="0.7" opacity="0.7"/><circle cx="98" cy="160" r="0.6" opacity="0.6"/><circle cx="88" cy="128" r="0.6" opacity="0.55"/><circle cx="102" cy="150" r="0.5" opacity="0.5"/><circle cx="80" cy="170" r="0.5" opacity="0.5"/>
+      </g>
+      <use class="bf-glint" href="#bf-glint" transform="translate(150 60) scale(1)"/>
+      <use class="bf-glint" href="#bf-glint" transform="translate(70 60) scale(1)"/>
+      <use class="bf-glint" href="#bf-glint" transform="translate(128 142) scale(0.85)"/>
+      <use class="bf-glint" href="#bf-glint" transform="translate(92 142) scale(0.85)"/>
+      <use class="bf-glint" href="#bf-glint" transform="translate(181 73) scale(0.7)"/>
+      <use class="bf-glint" href="#bf-glint" transform="translate(39 73) scale(0.7)"/>
+    </g>
+
+    <ellipse cx="110" cy="103" rx="24" ry="22" fill="url(#bf-core)"/>
+
+    <g class="bf-body">
+      <path d="M106.5,96 C108,95 112,95 113.5,96 C113,120 112,141 110,152 C108,141 107,120 106.5,96 Z" fill="rgba(233,238,255,0.85)"/>
+      <circle cx="110" cy="92" r="4" fill="rgba(244,247,255,0.92)"/>
+      <use class="bf-glint" href="#bf-glint" transform="translate(110 103) scale(1.5)"/>
+    </g>
+
+    <g fill="none" stroke="rgba(245,247,255,0.85)" stroke-width="1.2" stroke-linecap="round">
+      <path d="M110,90 C120,73 131,61 144,55 c5,-2 6,4 0,5"/>
+      <path d="M110,90 C100,73 89,61 76,55 c-5,-2 -6,4 0,5"/>
+    </g>
+  </svg>
+</div>
+<script>
+// Sparkly butterfly with a flight model tuned to read like a real butterfly:
+// clear wing-flapping, pulsed forward gliding, a wingbeat-synced bob, and a
+// smooth gently-wandering path with slow, hard-capped turning (never spins).
+(function(){
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var bf = document.getElementById('butterfly');
+  if(!bf || reduce) return;
+  var wings = bf.querySelector('.bf-wings');
+  var shown = false;
+
+  var TAU = Math.PI * 2;
+  var W = window.innerWidth, H = window.innerHeight;
+  window.addEventListener('resize', function(){ W = window.innerWidth; H = window.innerHeight; });
+
+  var pos = { x: W * 0.5, y: H * 0.5 };
+  var wander = -Math.PI / 2;  // direction of travel (radians, screen coords)
+  var wanderVel = 0;          // angular velocity of the meander
+  var heading = 0;            // body facing in degrees (turns slowly toward travel dir)
+  var phase = 0;              // wingbeat phase
+  var flapHz = 5, speed = 80;
+  var mode = 'flutter', modeTime = 0, modeDur = 1.6;
+  var last = performance.now();
+
+  function rand(a, b){ return a + Math.random() * (b - a); }
+  function wrap(a){ a %= TAU; if(a > Math.PI) a -= TAU; if(a < -Math.PI) a += TAU; return a; }
+  function shortDeg(d){ return ((d % 360) + 540) % 360 - 180; }
+
+  function chooseMode(){
+    modeTime = 0;
+    var r = Math.random();
+    if(r < 0.20){ mode = 'glide';   modeDur = rand(0.6, 1.3); flapHz = rand(1.2, 2.2); speed = rand(75, 115); }
+    else if(r < 0.34){ mode = 'rest'; modeDur = rand(0.7, 1.6); flapHz = rand(5, 7);     speed = rand(8, 22); }
+    else if(r < 0.44){ mode = 'dart'; modeDur = rand(0.3, 0.6); flapHz = rand(6.5, 8.5); speed = rand(190, 280); }
+    else { mode = 'flutter'; modeDur = rand(1.1, 2.6); flapHz = rand(4, 6); speed = rand(60, 110); }
+  }
+
+  function frame(now){
+    var dt = Math.min(0.04, (now - last) / 1000); last = now;
+
+    // the butterfly belongs to the Ideas tab only — stay hidden & idle elsewhere
+    var iv = document.getElementById('view-ideas');
+    if(!iv || !iv.classList.contains('is-active')){
+      if(shown){ bf.style.display = 'none'; shown = false; }
+      return requestAnimationFrame(frame);
+    }
+    if(!shown){
+      shown = true; bf.style.display = 'block';
+      pos.x = W * 0.5; pos.y = H * 0.5; wander = -Math.PI / 2; wanderVel = 0; heading = 0;
+    }
+
+    modeTime += dt;
+    if(modeTime >= modeDur) chooseMode();
+
+    // wingbeat
+    phase += flapHz * dt * TAU;
+    var pulse  = 0.5 + 0.5 * Math.sin(phase);  // forward thrust surges on each downstroke
+    var spread = 0.5 + 0.5 * Math.cos(phase);  // 1 = wings flat/spread, 0 = wings folded up
+
+    // smooth meander of the travel direction (damped random walk -> flowing curves)
+    wanderVel += rand(-1, 1) * 6 * dt;
+    wanderVel *= Math.pow(0.05, dt);
+    wanderVel = Math.max(-1.6, Math.min(1.6, wanderVel));
+    wander += wanderVel * dt;
+
+    // curve away from the edges before reaching them
+    var m = Math.max(70, Math.min(150, Math.min(W, H) * 0.16));
+    var ex = pos.x < m ? (m - pos.x) / m : pos.x > W - m ? -(pos.x - (W - m)) / m : 0;
+    var ey = pos.y < m ? (m - pos.y) / m : pos.y > H - m ? -(pos.y - (H - m)) / m : 0;
+    if(ex || ey){
+      var tw = Math.atan2(Math.sin(wander) + ey * 2.4, Math.cos(wander) + ex * 2.4);
+      wander += wrap(tw - wander) * Math.min(1, dt * 5);
+      wanderVel *= 0.6;
+    }
+
+    // glide forward along the heading; speed pulses with the wingbeat (glides steady)
+    var spd = mode === 'glide' ? speed : speed * (0.45 + 0.55 * pulse);
+    pos.x += Math.cos(wander) * spd * dt;
+    pos.y += Math.sin(wander) * spd * dt;
+    pos.x = Math.max(46, Math.min(W - 46, pos.x));
+    pos.y = Math.max(44, Math.min(H - 42, pos.y));
+
+    // body yaws toward the travel direction slowly, capped so it can never spin
+    var turn = shortDeg(wander * 180 / Math.PI + 90 - heading);
+    heading += Math.max(-130 * dt, Math.min(130 * dt, turn * 0.18));
+
+    // wingbeat-synced vertical bob
+    var bob = Math.sin(phase) * (mode === 'glide' ? 2 : mode === 'rest' ? 3 : 5.5);
+
+    bf.style.transform = 'translate(' + pos.x.toFixed(1) + 'px,' + (pos.y + bob).toFixed(1) + 'px) rotate(' + heading.toFixed(1) + 'deg)';
+
+    // flap: squeeze the wings toward the body axis (x = 110) with an explicit pivot
+    var sx = mode === 'glide' ? 0.74 + 0.22 * spread : 0.2 + 0.8 * Math.pow(spread, 0.6);
+    wings.setAttribute('transform', 'translate(110 0) scale(' + sx.toFixed(3) + ' 1) translate(-110 0)');
+
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+
+  // sparkle trail dropped along the flight path
+  setInterval(function(){
+    var r = bf.getBoundingClientRect();
+    if(!r.width) return;
+    var s = document.createElement('span');
+    s.className = 'bf-spark';
+    s.textContent = '✦';
+    s.style.left = (r.left + r.width / 2 + rand(-6, 6)) + 'px';
+    s.style.top  = (r.top + r.height / 2 + rand(-6, 6)) + 'px';
+    document.body.appendChild(s);
+    setTimeout(function(){ if(s.parentNode) s.parentNode.removeChild(s); }, 1200);
+  }, 380);
+})();
+</script>
+</body></html>
