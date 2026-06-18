@@ -155,6 +155,8 @@
   details.archive summary::-webkit-details-marker{ display:none; }
   details.archive summary .chev{ transition: transform 0.15s; font-size: 11px; color: var(--text-faint); }
   details.archive[open] summary .chev{ transform: rotate(90deg); }
+  .archive-cards{ margin-top: 14px; }
+  .archive + .archive{ margin-top: 18px; }
   .archive-list{ margin-top: 12px; display:flex; flex-direction:column; gap:6px; }
   .archive-row{ display:flex; justify-content: space-between; align-items:center; font-size: 13px; color: var(--text-dim); padding: 9px 12px; background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 8px; gap: 10px; flex-wrap:wrap; transition: border-color 0.15s var(--ease); }
   .archive-row:hover{ border-color: var(--border-strong); }
@@ -495,15 +497,31 @@
     active.sort(function(a, b){ return priorityInfo(a.priority).rank - priorityInfo(b.priority).rank; });
     var listHtml = active.length === 0 ? '<div class="empty-note">Nothing on the bench yet. Add something above.</div>' : active.map(renderCard).join('');
 
-    var archived = state.projects.filter(function(p){ return p.status === 'done' || p.status === 'abandoned'; });
-    var archiveRows = archived.length === 0 ? '<div class="empty-note">Nothing closed out yet.</div>' :
-      '<div class="archive-list">' + archived.map(function(a){
-        var days = daysBetween(a.createdAt, a.endedAt || Date.now());
-        return '<div class="archive-row"><div class="left"><span>' + escapeHtml(a.title) + '</span><span class="tag ' + (a.status==='done' ? 'tag-done' : 'tag-abandoned') + '">' + a.status + '</span></div><div class="right"><span style="font-family:var(--font-mono);font-size:11px;">' + days + 'd</span><button class="btn btn-tiny" data-action="revive" data-id="' + a.id + '">Revive</button></div></div>';
-      }).join('') + '</div>';
+    var done = state.projects.filter(function(p){ return p.status === 'done'; });
+    var abandoned = state.projects.filter(function(p){ return p.status === 'abandoned'; });
+    var doneHtml = done.length === 0 ? '<div class="empty-note">Nothing finished yet.</div>' :
+      '<div class="board">' + done.map(renderClosedCard).join('') + '</div>';
+    var abandonedHtml = abandoned.length === 0 ? '<div class="empty-note">Nothing abandoned yet.</div>' :
+      '<div class="board">' + abandoned.map(renderClosedCard).join('') + '</div>';
 
     return '<div class="section"><div class="capture-row"><input type="text" id="project-input" placeholder="What are you starting (or thinking about)?"><button class="btn btn-add" id="add-project-btn">Add</button></div><div class="board">' + listHtml + '</div></div>' +
-      '<details class="archive"><summary><span class="chev">▸</span> Done &amp; abandoned (' + archived.length + ')</summary><div class="archive-list-wrap">' + archiveRows + '</div></details>';
+      '<details class="archive"><summary><span class="chev">▸</span> Done (' + done.length + ')</summary><div class="archive-cards">' + doneHtml + '</div></details>' +
+      '<details class="archive"><summary><span class="chev">▸</span> Abandoned (' + abandoned.length + ')</summary><div class="archive-cards">' + abandonedHtml + '</div></details>';
+  }
+
+  function renderClosedCard(p){
+    var isDone = p.status === 'done';
+    var accent = isDone ? 'var(--moss)' : 'var(--rust)';
+    var days = daysBetween(p.createdAt, p.endedAt || Date.now());
+    return '<div class="card" style="--card-accent:' + accent + '">' +
+        '<div class="card-top"><span class="card-meta-label">' + days + ' days</span>' +
+          '<span class="tag ' + (isDone ? 'tag-done' : 'tag-abandoned') + '">' + p.status + '</span>' +
+        '</div>' +
+        '<h3>' + escapeHtml(p.title) + '</h3>' +
+        '<div class="card-meta">' + (isDone ? 'finished ' : 'abandoned ') + fmtDate(p.endedAt || Date.now()) + '</div>' +
+        '<div class="next-action-wrap"><span class="label">Final note</span><div class="next-action' + (p.note ? '' : ' is-empty') + '" contenteditable="true" data-id="' + p.id + '" data-placeholder="How did it end?" data-action="edit-note">' + escapeHtml(p.note || '') + '</div></div>' +
+        '<div class="card-actions"><button class="btn btn-ship" data-action="revive" data-id="' + p.id + '">Revive project</button></div>' +
+      '</div>';
   }
 
   function renderCard(p){
